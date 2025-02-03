@@ -1,0 +1,32 @@
+services:
+  pgadmin_service:
+    image: dpage/pgadmin4
+    container_name: my-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: aaa@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: aaaaa
+      PGADMIN_CONFIG_SERVER_MODE: 'True'
+    ports:
+      - "15432:80"
+    networks:
+      - my-network
+    volumes:
+      - ./pgadmin-data:/var/lib/pgadmin
+
+  postgres_service:
+    image: postgres
+    container_name: my-postgres
+    environment:
+      POSTGRES_USER: postgres   # Username for the PostgreSQL database
+      POSTGRES_PASSWORD: postgres   # Password for the PostgreSQL user
+      POSTGRES_DB: mydatabase   
+    volumes:
+      - ./create.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
